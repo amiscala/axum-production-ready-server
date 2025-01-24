@@ -1,6 +1,24 @@
 [package]
-name = "axum-production-ready"
+name = "axum-production-ready-server"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+serde = { version = "1.0.217", features = ["derive"] }
+axum-macros = "0.5.0"
+http = "1.2.0"
+axum =  { version = "0.8.1"}
+axum-extra = { version = "0.10.0", features = ["typed-header"] }
+tracing = {version = "0.1.41"}
+jsonwebtoken = "9.3.0"
+chrono = { version = "0.4.39", features = ["serde"] }
+uuid = { version = "1.12.0", features = ["v7","serde", "v4"] }
+sqlx = {version = "0.8.3", features = ["postgres", "runtime-tokio", "uuid", "chrono"]}
+sha2 = "0.10.8"
+regex = "1.11.1"
+axum-production-ready-observability = {path = "../axum-production-ready-observability"}
+axum-production-ready-security = {path = "../axum-production-ready-security"}
+axum-production-ready-authorization-macros = {path = "../axum-production-ready-authorization-macros"}
+tower = "0.5.2"
+tokio = { version = "1.0", features = ["full"] }
+dotenv = "0.15.0"
