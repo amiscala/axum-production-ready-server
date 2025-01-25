@@ -81,7 +81,7 @@ async fn main() {
         .route("/users", get(handler))
         .add_logging_and_security(jwt_config.clone())
         .layer(test).with_state(app_state.clone());
-    let user_router = user_router::Route(jwt_config.clone(), app_state.clone());
+    let user_router = user_router::route(jwt_config.clone(), app_state.clone());
     let app = private
         .merge(user_router)
         .merge(public_router);

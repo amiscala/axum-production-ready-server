@@ -14,6 +14,7 @@ pub enum Queries {
         email: String,
         name: String,
         last_name: String,
+        updated_at: DateTime<Utc>,
     },
     DeleteUser {
         user_id: Uuid,

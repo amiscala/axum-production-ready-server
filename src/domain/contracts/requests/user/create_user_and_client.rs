@@ -7,7 +7,7 @@ use crate::domain::models::user::User;
 pub struct CreateUserAndClient {
     email: String,
     name: String,
-    last_name: String,
+    last_name: String
 }
 
 impl AppRequest<CreateUserAndClient,(User, Client)> for CreateUserAndClient {

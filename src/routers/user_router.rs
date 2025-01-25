@@ -3,6 +3,7 @@ use std::sync::Arc;
 use axum::extract::State;
 use axum::{Extension, Router};
 use axum::routing::{delete, post, put};
+use chrono::Utc;
 use crate::api_adapter::{AppErrorResponse, AppSuccessResponse};
 use crate::{created_response, ok_response, AppState};
 use crate::domain::{CreateUserRequest, JsonExtractor, Queries};
@@ -13,7 +14,9 @@ use uuid::Uuid;
 use axum_production_ready_authorization_macros::require_scopes;
 use axum_production_ready_security::{JwtClaims, JwtConfig};
 use crate::domain::contracts::requests::common::app_contract::PathExtractor;
+use crate::domain::contracts::requests::user::create_user_and_client::CreateUserAndClient;
 use crate::domain::contracts::requests::user::update_user_request::UpdateUserRequest;
+use crate::domain::models::client::Client;
 use crate::routers::RouterExtensions;
 
 #[axum::debug_handler]
@@ -25,6 +28,15 @@ async fn create_user(State(state): State<Arc<AppState>>, JsonExtractor(request, 
     created_response!(res)
 }
 
+// #[axum::debug_handler]
+// async fn create_user_and_client(State(state): State<Arc<AppState>>, JsonExtractor(request, models): JsonExtractor<CreateUserAndClient, (User, Client)>) -> Result<AppSuccessResponse<User>, AppErrorResponse>{
+//     let query = Queries::CreateClientAndUser {
+//         user: models.0,
+//         client: models.1
+//     };
+//     let res:
+// }
+
 #[require_scopes("write")]
 async fn update_user(State(state): State<Arc<AppState>>, JsonExtractor(request, user): JsonExtractor<UpdateUserRequest, UpdateUserRequest>) -> Result<AppSuccessResponse<User>, AppErrorResponse> {
     let query = Queries::UpdateUser {
@@ -32,6 +44,7 @@ async fn update_user(State(state): State<Arc<AppState>>, JsonExtractor(request, 
         name: request.name,
         email: request.email,
         last_name: request.last_name,
+        updated_at: Utc::now(),
     };
     let res: User = execute_query(&state.database, query).await?;
     ok_response!(res)
@@ -59,7 +72,7 @@ async fn get_user_by_id(State(state): State<Arc<AppState>>, Extension(jwt_claims
     ok_response!(res)
 }
 
-pub fn Route(jwt_config: Arc<JwtConfig>, app_state: Arc<AppState>) -> Router {
+pub fn route(jwt_config: Arc<JwtConfig>, app_state: Arc<AppState>) -> Router {
     let public_router = Router::new()
         .route("/user", post(create_user))
         .add_logging()
