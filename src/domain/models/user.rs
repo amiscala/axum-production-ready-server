@@ -8,7 +8,7 @@ use crate::domain::models::status::AppStatus;
 // Later if it makes sense, add all the part for a user registration itself, now it is just a "placeholder" for later if necessary to create users it will be possible.
 
 pub const USER_SCOPES: &str = "read write admin";
-#[derive(Deserialize, Serialize, FromRow)]
+#[derive(Deserialize, Serialize, FromRow, Clone)]
 pub struct User {
     pub user_id: Uuid,
     pub email: String,

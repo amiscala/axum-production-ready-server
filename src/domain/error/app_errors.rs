@@ -14,6 +14,7 @@ pub enum AppErrors {
     FailedContractValidation(HashMap<String, String>),
     JsonParseError(String),
     Unauthorized(String),
+    InvalidScopes(String),
     MissingAuthorizationHeader(String),
     WrongAuthorizationHeader(String),
     Forbidden(String),
@@ -127,6 +128,14 @@ impl From<AppErrors> for AppErrorResponse {
                     StatusCode::INTERNAL_SERVER_ERROR,
                 ))
             }
+            AppErrors::InvalidScopes(val) => {
+                error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
+                AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
+                    &code_as_string,
+                    &code_as_string,
+                    StatusCode::FORBIDDEN,
+                ))
+            }
         }
     }
 }
@@ -143,7 +152,8 @@ impl Display for AppErrors {
             AppErrors::ExternalLibError { .. } => "InfrastructureError",
             AppErrors::MissingAuthorizationHeader(_) => "MissingAuthorizationHeader",
             AppErrors::WrongAuthorizationHeader(_) => "WrongAuthorizationHeader",
-            &AppErrors::FromStringToAppScopeConversionError(_) => "FromStringToAppScopeConversionError"
+            AppErrors::FromStringToAppScopeConversionError(_) => "FromStringToAppScopeConversionError",
+            AppErrors::InvalidScopes(_) => "InvalidScopes",
         };
         write!(f, "{}", variant_name)
     }

@@ -13,6 +13,14 @@ pub fn generate_client_secret() -> String {
     let hash: [u8;32] = hasher.finalize().into();
     bytes_to_hex(&hash)
 }
+
+pub fn string_to_sha_256(string_to_be_hashed: String) -> String{
+    let mut hasher = Sha256::new();
+    hasher.update(string_to_be_hashed);
+    let hash: [u8;32] = hasher.finalize().into();
+    bytes_to_hex(&hash)
+}
+
 pub fn bytes_to_hex(bytes: &[u8]) -> String {
     bytes.iter().map(|byte| format!("{:02x}", byte)).collect()
 }

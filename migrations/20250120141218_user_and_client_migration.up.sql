@@ -12,7 +12,7 @@ CREATE TABLE app_user(
 
 CREATE TABLE app_client(
     client_id UUID PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES app_user,
+    user_id UUID NOT NULL,
     FOREIGN KEY (user_id) REFERENCES app_user (user_id) ON DELETE CASCADE,
     client_description TEXT NOT NULL,
     client_secret TEXT NOT NULL,

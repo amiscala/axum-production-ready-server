@@ -41,7 +41,7 @@ use crate::domain::models::status::AppStatus;
 use crate::domain::models::user::User;
 use crate::persistance::Database;
 use crate::persistance::database::execute_query;
-use crate::routers::{user_router, RouterExtensions};
+use crate::routers::{authentication_router, user_router, RouterExtensions};
 
 #[derive(Clone)]
 struct AppState {
@@ -71,20 +71,10 @@ async fn main() {
     let public_router: Router<()> = Router::new()
         .route("/token", post(token_issuer))
         .layer(Extension(jwt_config.clone()));
-    let test =
-        ServiceBuilder::new()
-            .layer(middleware::from_fn(logging_middleware))
-            .layer(Extension(jwt_config.clone()))
-            .layer(middleware::from_fn(authentication_middleware::<AppErrorResponse>));
-    let private = Router::new()
-        .route("/users", post(create_user))
-        .route("/users", get(handler))
-        .add_logging_and_security(jwt_config.clone())
-        .layer(test).with_state(app_state.clone());
     let user_router = user_router::route(jwt_config.clone(), app_state.clone());
-    let app = private
+    let app = public_router
         .merge(user_router)
-        .merge(public_router);
+        .merge(authentication_router::route(jwt_config.clone(),app_state.clone()));
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
         .await
@@ -110,7 +100,7 @@ struct OutputPayload {
 #[require_scopes("read", "write")]
 async fn handler(
 
-    JsonExtractor(payload, model): JsonExtractor<MyRequest, OutputPayload>,
+    JsonExtractor(payload): JsonExtractor<MyRequest>,
 ) -> Result<AppSuccessResponse<OutputPayload>, AppErrorResponse> {
     // let test = fail().await?;
     // let scopes = vec!(AppScope::Read, AppScope::Write);
@@ -138,7 +128,8 @@ pub struct Test {
 // }
 
 #[axum::debug_handler]
-async fn create_user(State(state): State<Arc<AppState>>, JsonExtractor(request, user): JsonExtractor<CreateUserRequest, User>) -> Result<AppSuccessResponse<User>, AppErrorResponse> {
+async fn create_user(State(state): State<Arc<AppState>>, JsonExtractor(request): JsonExtractor<CreateUserRequest>) -> Result<AppSuccessResponse<User>, AppErrorResponse> {
+    let user = request.to_model();
     let query = Queries::CreateUser {
         user
     };
@@ -172,7 +163,7 @@ pub struct MyRequest {
     pub name: String,
 }
 
-impl AppRequest<MyRequest, OutputPayload> for MyRequest {
+impl AppRequest<MyRequest> for MyRequest {
     fn validate(&self) -> Result<(), AppErrors> {
         let mut test = Ok(());
         test = Err(AppErrors::InsertConflict);
@@ -181,10 +172,6 @@ impl AppRequest<MyRequest, OutputPayload> for MyRequest {
         } else {
             Ok(())
         }
-    }
-
-    fn build_model(&self) -> Result<OutputPayload, AppErrors> {
-        todo!()
     }
 }
 

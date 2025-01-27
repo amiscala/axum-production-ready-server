@@ -12,7 +12,7 @@ pub struct UpdateUserRequest {
     pub last_name:String
 }
 
-impl AppRequest<UpdateUserRequest, UpdateUserRequest> for UpdateUserRequest{
+impl AppRequest<UpdateUserRequest> for UpdateUserRequest{
     fn validate(&self) -> Result<(), AppErrors> {
         let mut validation_errors:HashMap<String,String> = HashMap::new();
         if !validate_regex(Regexes::Email, &self.email){
@@ -24,9 +24,5 @@ impl AppRequest<UpdateUserRequest, UpdateUserRequest> for UpdateUserRequest{
         else {
             Ok(())
         }
-    }
-
-    fn build_model(&self) -> Result<UpdateUserRequest, AppErrors> {
-        Ok(self.clone())
     }
 }

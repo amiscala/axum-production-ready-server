@@ -13,6 +13,7 @@ pub trait RouterExtensions<S>
     fn add_logging_and_security(self, jwt_config: Arc<JwtConfig>) -> Router<S>;
     // Used for when the router is public
     fn add_logging(self) -> Router<S>;
+    fn add_logging_and_jwt_config(self,jwt_config: Arc<JwtConfig>) -> Router<S>;
 }
 
 impl<S> RouterExtensions<S> for Router<S>
@@ -31,6 +32,12 @@ where
     fn add_logging(self) -> Router<S> {
         self.layer(
             ServiceBuilder::new()
+                .layer(middleware::from_fn(logging_middleware)))
+    }
+    fn add_logging_and_jwt_config(self,jwt_config: Arc<JwtConfig>) -> Router<S> {
+        self.layer(
+            ServiceBuilder::new()
+                .layer(Extension(jwt_config))
                 .layer(middleware::from_fn(logging_middleware)))
     }
 }

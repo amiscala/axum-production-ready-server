@@ -11,17 +11,16 @@ use serde::Serialize;
 use crate::AppState;
 
 // Using option instead of return because if the return is valid, there will be no action to take.
-pub trait AppRequest<R, M>
+pub trait AppRequest<R>
 {
     fn validate(&self) -> Result<(), AppErrors>;
-    fn build_model(&self) -> Result<M, AppErrors>;
 }
 
 
-pub struct JsonExtractor<R,M>(pub R, pub M);
-impl<R,M, S> FromRequest<S> for JsonExtractor<R,M>
+pub struct JsonExtractor<R>(pub R);
+impl<R, S> FromRequest<S> for JsonExtractor<R>
 where
-    R: AppRequest<R,M>,
+    R: AppRequest<R>,
     S: Send + Sync,
     Json<R>: FromRequest<S, Rejection = JsonRejection>,
     Arc<AppState>: FromRef<S>
@@ -29,17 +28,17 @@ where
     type Rejection = AppErrorResponse;
 
     async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
+        let extensions = req.extensions();
         let Json(val) = Json::<R>::from_request(req, state).await?;
         val.validate()?;
-        let model = val.build_model()?;
-        Ok(JsonExtractor(val, model))
+        Ok(JsonExtractor(val))
     }
 }
 
-pub struct FormExtractor<R,M>(pub R, pub M);
-impl<R,M, S> FromRequest<S> for FormExtractor<R,M>
+pub struct FormExtractor<R>(pub R);
+impl<R, S> FromRequest<S> for FormExtractor<R>
 where
-    R: AppRequest<R,M>,
+    R: AppRequest<R>,
     S: Send + Sync,
     Form<R>: FromRequest<S, Rejection = FormRejection>,
     Arc<AppState>: FromRef<S>
@@ -49,8 +48,7 @@ where
     async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
         let Form(val) = Form::<R>::from_request(req, state).await?;
         val.validate()?;
-        let model = val.build_model()?;
-        Ok(FormExtractor(val, model))
+        Ok(FormExtractor(val))
     }
 }
 

@@ -2,21 +2,22 @@ use crate::domain::models::common::{generate_client_secret, create_uuid_v7};
 use chrono::DateTime;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use sqlx::FromRow;
 use uuid::Uuid;
 
 use crate::domain::models::status::AppStatus;
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, FromRow)]
 pub struct Client {
-    client_id: Uuid,
-    client_description: String,
-    user_id: Uuid,
-    client_secret: String,
-    client_scopes: String,
-    created_at: DateTime<Utc>,
-    updated_at: DateTime<Utc>,
-    expires_at: Option<DateTime<Utc>>,
-    status: String,
+    pub client_id: Uuid,
+    pub client_description: String,
+    pub user_id: Uuid,
+    pub client_secret: String,
+    pub client_scopes: String,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub expires_at: Option<DateTime<Utc>>,
+    pub status: String,
 }
 
 impl Client {
