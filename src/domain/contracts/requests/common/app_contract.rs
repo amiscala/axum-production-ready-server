@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::sync::Arc;
 use crate::api_adapter::{AppErrorResponse};
 use crate::domain::AppErrors;
@@ -7,7 +6,6 @@ use axum::extract::{FromRef, FromRequest, FromRequestParts, Path, Query, Request
 use axum::{Form, Json};
 use http::request::Parts;
 use serde::de::DeserializeOwned;
-use serde::Serialize;
 use crate::AppState;
 
 // Using option instead of return because if the return is valid, there will be no action to take.

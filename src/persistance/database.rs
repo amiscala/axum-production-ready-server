@@ -1,11 +1,9 @@
-use std::sync::Arc;
 use chrono::Utc;
 use sqlx::Acquire;
 use sqlx::{Postgres, Pool, query_as, FromRow};
 use crate::domain::{AppErrors, Queries};
 use crate::domain::models::common::string_to_sha_256;
 use crate::domain::models::queries::Transactions;
-use crate::domain::models::user::User;
 
 #[derive(Clone)]
 pub enum Database {

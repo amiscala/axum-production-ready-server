@@ -27,7 +27,7 @@ impl AppRequest<CreateClientRequest> for CreateClientRequest {
         if let Err(err) = validate_scopes(&self.client_scopes) {
             validation_errors.insert(err.0, err.1);
         }
-        if(validation_errors.len() > 0){
+        if validation_errors.len() > 0 {
             Err(AppErrors::FailedContractValidation(validation_errors))
         }
         else{

@@ -1,6 +1,6 @@
 use crate::domain::error::app_errors::LibType;
 use crate::domain::AppErrors;
-use sqlx::{Error, PgPool, Pool, Postgres};
+use sqlx::{Error};
 
 impl From<Error> for AppErrors {
     fn from(value: Error) -> Self {

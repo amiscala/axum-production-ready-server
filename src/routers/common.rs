@@ -1,6 +1,5 @@
 use std::sync::Arc;
 use axum::{middleware, Extension, Router};
-use tower::layer::util::Identity;
 use tower::ServiceBuilder;
 use axum_production_ready_observability::logging_middleware;
 use axum_production_ready_security::{authentication_middleware, JwtConfig};

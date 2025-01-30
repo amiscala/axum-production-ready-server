@@ -1,5 +1,4 @@
 use crate::domain::models::client::Client;
-use crate::domain::models::status::AppStatus;
 use crate::domain::models::user::User;
 use chrono::DateTime;
 use chrono::Utc;

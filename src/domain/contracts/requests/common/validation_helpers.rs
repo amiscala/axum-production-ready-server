@@ -1,5 +1,4 @@
 use core::str::FromStr;
-use std::collections::HashMap;
 use regex::Regex;
 use crate::domain::AppScope;
 

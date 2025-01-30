@@ -1,5 +1,3 @@
-use http::StatusCode;
-use crate::api_adapter::AppSuccessResponse;
 #[macro_export] macro_rules! ok_response {
     ($response_body:expr) => {
         Ok(AppSuccessResponse::new($response_body, StatusCode::OK))

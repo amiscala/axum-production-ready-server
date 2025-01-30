@@ -1,6 +1,5 @@
 use http::StatusCode;
 use serde::{Serialize, Serializer};
-use uuid::{ContextV7, Timestamp, Uuid};
 
 pub struct CustomHttpStatusCode(pub StatusCode);
 impl Serialize for CustomHttpStatusCode {

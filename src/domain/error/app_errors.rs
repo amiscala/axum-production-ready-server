@@ -1,10 +1,7 @@
 use crate::api_adapter::error::{AppErrorResponse, AppErrorStruct,app_error_response::app_error_struct::AppErrorInnerResponse};
-use axum::body::Body;
-use axum::extract::rejection::JsonRejection;
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
 use core::fmt::{Display, Formatter};
 use std::collections::HashMap;
+use http::StatusCode;
 use tracing::error_span;
 
 #[derive(Debug)]
@@ -132,8 +129,8 @@ impl From<AppErrors> for AppErrorResponse {
                 error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
                 AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
                     &code_as_string,
-                    &code_as_string,
-                    StatusCode::FORBIDDEN,
+                    "InternalServerError",
+                    StatusCode::INTERNAL_SERVER_ERROR,
                 ))
             }
         }

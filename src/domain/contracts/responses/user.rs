@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize};
 use crate::domain::models::client::Client;
 use crate::domain::models::user::User;
 

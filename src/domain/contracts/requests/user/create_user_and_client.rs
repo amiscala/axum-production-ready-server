@@ -26,7 +26,7 @@ impl AppRequest<CreateUserAndClient> for CreateUserAndClient {
         if !validate_regex(Regexes::Email, &self.email){
             validation_errors.insert("InvalidEmail".to_string(), "Invalid e-mail provided".to_string());
         }
-        if(validation_errors.len() > 0){
+        if validation_errors.len() > 0 {
             Err(AppErrors::FailedContractValidation(validation_errors))
         }
         else{

@@ -4,7 +4,6 @@ use crate::domain::contracts::responses::TokenResponse;
 use crate::domain::contracts::IssueTokenRequest;
 use crate::domain::models::client::Client;
 use crate::domain::models::common::string_to_sha_256;
-use crate::domain::{AppErrors, JsonExtractor, Queries};
 use crate::persistance::database::execute_query;
 use crate::{ok_response, AppState};
 use axum::extract::State;
@@ -13,6 +12,7 @@ use axum_production_ready_security::{issue_jwt_token, JwtConfig};
 use std::sync::Arc;
 use axum::routing::post;
 use http::StatusCode;
+use crate::domain::{AppErrors, Queries};
 use crate::routers::RouterExtensions;
 
 #[axum::debug_handler]

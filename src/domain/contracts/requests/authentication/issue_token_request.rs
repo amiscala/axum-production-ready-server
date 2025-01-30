@@ -25,7 +25,7 @@ impl AppRequest<IssueTokenRequest> for IssueTokenRequest{
         if self.grant_type != "client_credentials" {
             validation_errors.insert("InvalidGrantType".to_string(), "Invalid grant type".to_string());
         }
-        if(validation_errors.len() > 0){
+        if validation_errors.len() > 0 {
             Err(AppErrors::FailedContractValidation(validation_errors))
         }
         else{

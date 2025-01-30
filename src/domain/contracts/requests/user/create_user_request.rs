@@ -1,11 +1,8 @@
 use std::collections::HashMap;
 use serde::Deserialize;
-use uuid::Uuid;
 use crate::domain::models::user::User;
 use crate::domain::{AppRequest, AppErrors};
 use crate::domain::contracts::requests::common::{validate_regex, Regexes};
-use crate::domain::contracts::requests::common::validation_helpers::validate_scopes;
-use crate::domain::models::client::Client;
 
 #[derive(Deserialize)]
 pub struct CreateUserRequest {
@@ -30,7 +27,7 @@ impl AppRequest<CreateUserRequest> for CreateUserRequest {
         //     validation_errors.insert("InvalidScopes".to_string(), "Invalid scopes they must only lower case letters splitted by a single space".to_string());
         // }
 
-        if(validation_errors.len() > 0){
+        if validation_errors.len() > 0 {
             Err(AppErrors::FailedContractValidation(validation_errors))
         }
         else{
