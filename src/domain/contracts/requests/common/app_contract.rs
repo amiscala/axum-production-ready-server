@@ -26,7 +26,6 @@ where
     type Rejection = AppErrorResponse;
 
     async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
-        let extensions = req.extensions();
         let Json(val) = Json::<R>::from_request(req, state).await?;
         val.validate()?;
         Ok(JsonExtractor(val))

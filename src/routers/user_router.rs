@@ -1,4 +1,4 @@
-use crate::AppErrors;
+use crate::domain::AppErrors;
 use std::sync::Arc;
 use axum::extract::State;
 use axum::{Extension, Router};

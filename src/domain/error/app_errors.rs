@@ -8,13 +8,13 @@ use tracing::error_span;
 pub enum AppErrors {
     InsertConflict(String),
     RegisterNotFound(String),
-    FailedContractValidation(HashMap<String, String>),
     JsonParseError(String),
-    Unauthorized(String),
+    FailedContractValidation(HashMap<String, String>),
     InvalidScopes(String),
     MissingAuthorizationHeader(String),
     WrongAuthorizationHeader(String),
     Forbidden(String),
+    Unauthorized(String),
     ExternalLibError {
         lib_type: LibType,
         message: String,
@@ -128,9 +128,9 @@ impl From<AppErrors> for AppErrorResponse {
             AppErrors::InvalidScopes(val) => {
                 error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
                 AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
-                    &code_as_string,
-                    "InternalServerError",
-                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Forbidden",
+                    "Forbidden",
+                    StatusCode::FORBIDDEN,
                 ))
             }
         }

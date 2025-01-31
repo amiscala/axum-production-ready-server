@@ -1,5 +1,4 @@
 use chrono::Utc;
-use sqlx::Acquire;
 use sqlx::{Postgres, Pool, query_as, FromRow};
 use crate::domain::{AppErrors, Queries};
 use crate::domain::models::common::string_to_sha_256;
