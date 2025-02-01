@@ -1,5 +1,5 @@
 /target
 /private_key.pem
 /public_key.pem
-/server.crt,
+/server.crt
 /server.key
