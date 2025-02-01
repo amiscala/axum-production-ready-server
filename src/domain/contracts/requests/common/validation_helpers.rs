@@ -1,6 +1,6 @@
+use crate::domain::AppScope;
 use core::str::FromStr;
 use regex::Regex;
-use crate::domain::AppScope;
 
 pub enum Regexes {
     Email,

@@ -1,9 +1,9 @@
-use chrono::{DateTime, Utc};
 use crate::domain::models::common::create_uuid_v7;
+use crate::domain::models::status::AppStatus;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
-use crate::domain::models::status::AppStatus;
 
 // Later if it makes sense, add all the part for a user registration itself, now it is just a "placeholder" for later if necessary to create users it will be possible.
 

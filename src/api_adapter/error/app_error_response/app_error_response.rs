@@ -1,11 +1,11 @@
-use http::StatusCode;
 use crate::api_adapter::AppErrorStruct;
 use axum::extract::rejection::{FormRejection, JsonRejection, PathRejection, QueryRejection};
-use tracing::error_span;
 use axum::response::IntoResponse;
 use axum::response::Response;
 use axum::Json;
 use axum_production_ready_security::SecurityErrors;
+use http::StatusCode;
+use tracing::error_span;
 
 pub enum AppErrorResponse {
     // JsonRejection is a wrapper for the Axum JsonRejection error, has this value to be able to handle correctly the errors
@@ -13,7 +13,6 @@ pub enum AppErrorResponse {
     FormRejection(FormRejection),
     PathRejection(PathRejection),
     QueryRejection(QueryRejection),
-    AppContractError(AppErrorStruct),
     AppBusinessError(AppErrorStruct),
 }
 impl IntoResponse for AppErrorResponse {
@@ -22,9 +21,6 @@ impl IntoResponse for AppErrorResponse {
         match self {
             AppErrorResponse::JsonRejection(rejection) => {
                 (rejection.status(), Json(AppErrorStruct::from_single_error("JsonRejection", &rejection.body_text(), StatusCode::BAD_REQUEST))).into_response()
-            }
-            AppErrorResponse::AppContractError(app_error) => {
-                (StatusCode::BAD_REQUEST, Json(app_error)).into_response()
             }
             AppErrorResponse::AppBusinessError(app_error_response) => {
                 // error_span!("test", message=app_error_response.error.message, code=app_error_response.error.code);

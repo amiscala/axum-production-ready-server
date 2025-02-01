@@ -1,8 +1,8 @@
-use std::collections::HashMap;
-use serde::Deserialize;
-use crate::domain::models::user::User;
-use crate::domain::{AppRequest, AppErrors};
 use crate::domain::contracts::requests::common::{validate_regex, Regexes};
+use crate::domain::models::user::User;
+use crate::domain::{AppErrors, AppRequest};
+use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Deserialize)]
 pub struct CreateUserRequest {

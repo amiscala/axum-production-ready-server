@@ -1,4 +1,5 @@
 use crate::domain::models::client::Client;
+use crate::domain::models::todo::Todo;
 use crate::domain::models::user::User;
 use chrono::DateTime;
 use chrono::Utc;
@@ -12,7 +13,7 @@ pub enum Queries {
         user_id: Uuid,
         email: String,
         name: String,
-        last_name: String
+        last_name: String,
     },
     DeleteUser {
         user_id: Uuid,
@@ -41,11 +42,32 @@ pub enum Queries {
     },
     GetClientWithClientIdAndClientSecret {
         client_id: Uuid,
-        client_secret: String
+        client_secret: String,
     },
-    GetClients {
+    CreateTodo {
+        todo: Todo,
+    },
+    UpdateTodo {
         user_id: Uuid,
+        todo_id: Uuid,
+        title: String,
+        body: String,
+        category: String,
+        status: String,
     },
+    DeleteTodo {
+        user_id: Uuid,
+        todo_id: Uuid,
+    },
+    GetTodo {
+        user_id: Uuid,
+        todo_id: Uuid,
+    },
+}
+
+pub enum VecQueries {
+    GetTodos { user_id: Uuid },
+    GetClients { user_id: Uuid },
 }
 
 pub enum Transactions {

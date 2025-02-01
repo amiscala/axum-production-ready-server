@@ -1,12 +1,12 @@
-use std::sync::Arc;
-use crate::api_adapter::{AppErrorResponse};
+use crate::api_adapter::AppErrorResponse;
 use crate::domain::AppErrors;
+use crate::AppState;
 use axum::extract::rejection::{FormRejection, JsonRejection, PathRejection, QueryRejection};
 use axum::extract::{FromRef, FromRequest, FromRequestParts, Path, Query, Request};
 use axum::{Form, Json};
 use http::request::Parts;
 use serde::de::DeserializeOwned;
-use crate::AppState;
+use std::sync::Arc;
 
 // Using option instead of return because if the return is valid, there will be no action to take.
 pub trait AppRequest<R>

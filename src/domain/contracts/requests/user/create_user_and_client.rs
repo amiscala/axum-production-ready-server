@@ -1,9 +1,9 @@
-use std::collections::HashMap;
-use serde::Deserialize;
-use crate::domain::{AppErrors, AppRequest};
 use crate::domain::contracts::requests::common::{validate_regex, Regexes};
 use crate::domain::models::client::Client;
 use crate::domain::models::user::User;
+use crate::domain::{AppErrors, AppRequest};
+use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Deserialize, Clone)]
 pub struct CreateUserAndClient {

@@ -1,4 +1,4 @@
-use crate::domain::models::common::{generate_client_secret, create_uuid_v7};
+use crate::domain::models::common::{create_uuid_v7, generate_client_secret};
 use chrono::DateTime;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};

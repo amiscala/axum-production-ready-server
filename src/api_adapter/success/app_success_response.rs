@@ -1,8 +1,8 @@
-use axum::Json;
+use crate::api_adapter::CustomHttpStatusCode;
 use axum::response::{IntoResponse, Response};
+use axum::Json;
 use http::StatusCode;
 use serde::Serialize;
-use crate::api_adapter::CustomHttpStatusCode;
 
 #[derive(Serialize)]
 pub struct AppSuccessResponse<T>

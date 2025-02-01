@@ -1,5 +1,5 @@
-use http::StatusCode;
 use crate::api_adapter::CustomHttpStatusCode;
+use http::StatusCode;
 use serde::Serialize;
 
 #[derive(Serialize)]

@@ -1,7 +1,7 @@
+use crate::domain::AppErrors;
 use core::fmt::{Display, Formatter};
 use core::str::FromStr;
 use serde::{Deserialize, Serialize};
-use crate::domain::AppErrors;
 
 #[derive(Debug,Serialize, Deserialize, Clone, PartialEq)]
 pub enum AppScope {

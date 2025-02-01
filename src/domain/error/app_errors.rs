@@ -1,18 +1,16 @@
-use crate::api_adapter::error::{AppErrorResponse, AppErrorStruct,app_error_response::app_error_struct::AppErrorInnerResponse};
+use crate::api_adapter::error::{app_error_response::app_error_struct::AppErrorInnerResponse, AppErrorResponse, AppErrorStruct};
 use core::fmt::{Display, Formatter};
-use std::collections::HashMap;
 use http::StatusCode;
+use std::collections::HashMap;
 use tracing::error_span;
 
 #[derive(Debug)]
 pub enum AppErrors {
     InsertConflict(String),
     RegisterNotFound(String),
-    JsonParseError(String),
     FailedContractValidation(HashMap<String, String>),
     InvalidScopes(String),
     MissingAuthorizationHeader(String),
-    WrongAuthorizationHeader(String),
     Forbidden(String),
     Unauthorized(String),
     ExternalLibError {
@@ -60,14 +58,6 @@ impl From<AppErrors> for AppErrorResponse {
                     StatusCode::BAD_REQUEST,
                 ))
             }
-            AppErrors::JsonParseError(val) => {
-                error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
-                AppErrorResponse::AppContractError(AppErrorStruct::from_single_error(
-                    &code_as_string,
-                    &val,
-                    StatusCode::BAD_REQUEST,
-                ))
-            }
             AppErrors::Unauthorized(val) => {
                 error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
                 AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
@@ -109,14 +99,6 @@ impl From<AppErrors> for AppErrorResponse {
                     StatusCode::FORBIDDEN,
                 ))
             }
-            AppErrors::WrongAuthorizationHeader(val) => {
-                error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
-                AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
-                    &code_as_string,
-                    &code_as_string,
-                    StatusCode::FORBIDDEN,
-                ))
-            }
             AppErrors::FromStringToAppScopeConversionError(val) => {
                 error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
                 AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
@@ -142,13 +124,12 @@ impl Display for AppErrors {
         let variant_name = match self {
             AppErrors::InsertConflict(_) => "InsertConflict",
             AppErrors::FailedContractValidation(_) => "FailedContractValidation",
-            AppErrors::JsonParseError(_) => "JsonParseError",
+            // AppErrors::JsonParseError(_) => "JsonParseError",
             AppErrors::Unauthorized(_) => "Unauthorized",
             AppErrors::Forbidden(_) => "Forbidden",
             AppErrors::RegisterNotFound(_) => "RegisterNotFound",
             AppErrors::ExternalLibError { .. } => "InfrastructureError",
             AppErrors::MissingAuthorizationHeader(_) => "MissingAuthorizationHeader",
-            AppErrors::WrongAuthorizationHeader(_) => "WrongAuthorizationHeader",
             AppErrors::FromStringToAppScopeConversionError(_) => "FromStringToAppScopeConversionError",
             AppErrors::InvalidScopes(_) => "InvalidScopes",
         };

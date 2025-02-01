@@ -1,9 +1,9 @@
-use std::sync::Arc;
+use crate::api_adapter::AppErrorResponse;
 use axum::{middleware, Extension, Router};
-use tower::ServiceBuilder;
 use axum_production_ready_observability::logging_middleware;
 use axum_production_ready_security::{authentication_middleware, JwtConfig};
-use crate::api_adapter::AppErrorResponse;
+use std::sync::Arc;
+use tower::ServiceBuilder;
 
 
 pub trait RouterExtensions<S>

@@ -1,6 +1,6 @@
-use std::io::Error;
-use crate::domain::AppErrors;
 use crate::domain::error::app_errors::LibType;
+use crate::domain::AppErrors;
+use std::io::Error;
 
 impl From<std::io::Error> for AppErrors{
     fn from(value: Error) -> Self {

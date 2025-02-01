@@ -1,2 +1,2 @@
 pub mod token_response;
-pub use token_response::{TokenResponse};
+pub use token_response::TokenResponse;

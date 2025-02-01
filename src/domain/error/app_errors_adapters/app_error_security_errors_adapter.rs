@@ -1,6 +1,6 @@
-use axum_production_ready_security::SecurityErrors;
-use crate::domain::AppErrors;
 use crate::domain::error::app_errors::LibType;
+use crate::domain::AppErrors;
+use axum_production_ready_security::SecurityErrors;
 
 impl From<SecurityErrors> for AppErrors{
     fn from(value: SecurityErrors) -> Self {

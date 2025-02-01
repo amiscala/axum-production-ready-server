@@ -4,16 +4,16 @@ use crate::domain::contracts::responses::TokenResponse;
 use crate::domain::contracts::IssueTokenRequest;
 use crate::domain::models::client::Client;
 use crate::domain::models::common::string_to_sha_256;
+use crate::domain::{AppErrors, Queries};
 use crate::persistance::database::execute_query;
+use crate::routers::RouterExtensions;
 use crate::{ok_response, AppState};
 use axum::extract::State;
+use axum::routing::post;
 use axum::{Extension, Router};
 use axum_production_ready_security::{issue_jwt_token, JwtConfig};
-use std::sync::Arc;
-use axum::routing::post;
 use http::StatusCode;
-use crate::domain::{AppErrors, Queries};
-use crate::routers::RouterExtensions;
+use std::sync::Arc;
 
 #[axum::debug_handler]
 async fn authenticate(
