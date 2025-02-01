@@ -1,6 +1,8 @@
+use crate::domain::models::status::AppStatus;
 use crate::domain::AppScope;
 use core::str::FromStr;
 use regex::Regex;
+use std::fmt::format;
 
 pub enum Regexes {
     Email,
@@ -10,15 +12,10 @@ pub enum Regexes {
 const EMAIL_REGEX: &str = "[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+";
 const SCOPES_REGEX: &str = "^([a-z]+)( [a-z]+)*$";
 
-
 pub fn validate_regex(regex: Regexes, value: &str) -> bool {
     let regex_expression = match regex {
-        Regexes::Email => {
-            Regex::new(EMAIL_REGEX).expect("Wrong Email Regex")
-        }
-        Regexes::Scopes => {
-            Regex::new(SCOPES_REGEX).expect("Wrong Scopes Regex")
-        }
+        Regexes::Email => Regex::new(EMAIL_REGEX).expect("Wrong Email Regex"),
+        Regexes::Scopes => Regex::new(SCOPES_REGEX).expect("Wrong Scopes Regex"),
     };
     if !regex_expression.is_match(value) {
         return false;
@@ -33,14 +30,23 @@ pub fn validate_scopes(scopes: &str) -> Result<(), (String, String)> {
     for scope in scopes_vec {
         if let Err(_) = AppScope::from_str(scope) {
             valid = false;
-            error_string = format!("{}, {}", error_string,scope);
+            error_string = format!("{}, {}", error_string, scope);
         }
     }
-    if valid
-    {
+    if valid {
         Ok(())
+    } else {
+        Err(("ScopesNotFound".to_string(), error_string))
     }
-    else{
-        Err(("ScopesNotFound".to_string(),error_string))
+}
+
+pub fn validate_status(status: &str) -> Result<(), (String, String)> {
+    let status_enum = AppStatus::from_str(status);
+    match status_enum {
+        Ok(_) => Ok(()),
+        Err(error) => Err((
+            error.to_string(),
+            format!("Received Invalid Status {}", status),
+        )),
     }
 }

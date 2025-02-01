@@ -1,4 +1,6 @@
-use crate::api_adapter::error::{app_error_response::app_error_struct::AppErrorInnerResponse, AppErrorResponse, AppErrorStruct};
+use crate::api_adapter::error::{
+    app_error_response::app_error_struct::AppErrorInnerResponse, AppErrorResponse, AppErrorStruct,
+};
 use core::fmt::{Display, Formatter};
 use http::StatusCode;
 use std::collections::HashMap;
@@ -10,21 +12,19 @@ pub enum AppErrors {
     RegisterNotFound(String),
     FailedContractValidation(HashMap<String, String>),
     InvalidScopes(String),
+    InvalidStatus(String),
     MissingAuthorizationHeader(String),
     Forbidden(String),
     Unauthorized(String),
-    ExternalLibError {
-        lib_type: LibType,
-        message: String,
-    },
-    FromStringToAppScopeConversionError(String)
+    ExternalLibError { lib_type: LibType, message: String },
+    FromStringToAppScopeConversionError(String),
 }
 #[derive(Debug)]
 pub enum LibType {
     Postgresql,
     JWT,
     StdSystemTime,
-    StdIO
+    StdIO,
 }
 impl From<AppErrors> for AppErrorResponse {
     fn from(value: AppErrors) -> Self {
@@ -39,7 +39,7 @@ impl From<AppErrors> for AppErrorResponse {
                 );
                 AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
                     &code_as_string,
-                    "Duplicated correlation_key",
+                    "Duplicated value received",
                     StatusCode::CONFLICT,
                 ))
             }
@@ -74,7 +74,10 @@ impl From<AppErrors> for AppErrorResponse {
                     StatusCode::FORBIDDEN,
                 ))
             }
-            AppErrors::ExternalLibError { lib_type: infrastructure_type, message} => {
+            AppErrors::ExternalLibError {
+                lib_type: infrastructure_type,
+                message,
+            } => {
                 let message = format!("Type {}: Error: {}", infrastructure_type, message);
                 error_span!(ERROR_MESSAGE, message = message, code = &code_as_string);
                 AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
@@ -115,6 +118,14 @@ impl From<AppErrors> for AppErrorResponse {
                     StatusCode::FORBIDDEN,
                 ))
             }
+            AppErrors::InvalidStatus(val) => {
+                error_span!(ERROR_MESSAGE, message = val, code = &code_as_string);
+                AppErrorResponse::AppBusinessError(AppErrorStruct::from_single_error(
+                    &code_as_string,
+                    &code_as_string,
+                    StatusCode::BAD_REQUEST,
+                ))
+            }
         }
     }
 }
@@ -130,8 +141,11 @@ impl Display for AppErrors {
             AppErrors::RegisterNotFound(_) => "RegisterNotFound",
             AppErrors::ExternalLibError { .. } => "InfrastructureError",
             AppErrors::MissingAuthorizationHeader(_) => "MissingAuthorizationHeader",
-            AppErrors::FromStringToAppScopeConversionError(_) => "FromStringToAppScopeConversionError",
+            AppErrors::FromStringToAppScopeConversionError(_) => {
+                "FromStringToAppScopeConversionError"
+            }
             AppErrors::InvalidScopes(_) => "InvalidScopes",
+            AppErrors::InvalidStatus(_) => "InvalidStatus",
         };
         write!(f, "{}", variant_name)
     }
@@ -143,7 +157,7 @@ impl Display for LibType {
             LibType::Postgresql => "Postgresql",
             LibType::JWT => "JWT",
             LibType::StdSystemTime => "StdSystemTime",
-            &LibType::StdIO => "StdIO"
+            &LibType::StdIO => "StdIO",
         };
         write!(f, "{}", variant_name)
     }
