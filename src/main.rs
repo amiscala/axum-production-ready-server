@@ -13,8 +13,10 @@ use axum_production_ready_security::get_jwt_configuration;
 use axum_production_ready_observability::ObservabilityGuard;
 use axum::http::StatusCode;
 use std::env;
+use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::sync::Arc;
+use axum_server::tls_rustls::RustlsConfig;
 use axum::extract::State;
 use sqlx::{migrate, PgPool};
 use tracing::{info_span, Level};
@@ -43,8 +45,17 @@ async fn main() {
     );
 
     let migration_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    let pool = PgPool::connect(&migration_url).await.expect("Error while creating migration connection pool");
-    migrate!("./migrations").run(&pool).await.expect("Error while running migrations");
+    println!("");
+    println!("Starting connection to db at {}", migration_url);
+    let pool = PgPool::connect(&migration_url).await.expect(&format!("Error while creating migration connection pool with db url {}", migration_url));
+    println!("");
+    println!("");
+    println!("");
+    println!("");
+    println!("");
+    println!("Start running migrations");
+    migrate!("./migrations").run(&pool).await.expect( &format!("Error while running migrations with this db url :{}", migration_url));
+    println!("Finished");
 
     let app_state = Arc::new(AppState {
         database: Postgres(pool),
@@ -54,9 +65,19 @@ async fn main() {
     let app = user_router
         .merge(authentication_router::route(jwt_config.clone(),app_state.clone()));
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
+    // let listener = tokio::net::TcpListener::bind("0.0.0.0:4000")
+    //     .await
+    //     .unwrap();
+    // tracing::info!("listening on {}", listener.local_addr().unwrap());
+    let config = RustlsConfig::from_pem_file(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("server.crt"),
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("server.key"),
+    ).await.unwrap();
+    let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
+    axum_server::bind_rustls(addr, config)
+        .serve(app.into_make_service())
         .await
         .unwrap();
-    tracing::info!("listening on {}", listener.local_addr().unwrap());
-    axum::serve(listener, app).await.unwrap()
 }
