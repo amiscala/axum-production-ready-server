@@ -3,7 +3,7 @@ use crate::domain::models::user::User;
 use serde::Serialize;
 
 #[derive(Serialize)]
-pub struct CreateUserAndClientResponse{
+pub struct CreateUserAndClientResponse {
     pub user: User,
-    pub client: Client
+    pub client: Client,
 }

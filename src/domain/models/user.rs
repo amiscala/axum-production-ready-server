@@ -17,11 +17,11 @@ pub struct User {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub user_scopes: String,
-    pub status:String
+    pub status: String,
 }
 
 impl User {
-    pub fn new(email: String, name:String, last_name: String) -> Self {
+    pub fn new(email: String, name: String, last_name: String) -> Self {
         let now = Utc::now();
         Self {
             email,

@@ -9,11 +9,9 @@ use serde::de::DeserializeOwned;
 use std::sync::Arc;
 
 // Using option instead of return because if the return is valid, there will be no action to take.
-pub trait AppRequest<R>
-{
+pub trait AppRequest<R> {
     fn validate(&self) -> Result<(), AppErrors>;
 }
-
 
 pub struct JsonExtractor<R>(pub R);
 impl<R, S> FromRequest<S> for JsonExtractor<R>
@@ -21,7 +19,7 @@ where
     R: AppRequest<R>,
     S: Send + Sync,
     Json<R>: FromRequest<S, Rejection = JsonRejection>,
-    Arc<AppState>: FromRef<S>
+    Arc<AppState>: FromRef<S>,
 {
     type Rejection = AppErrorResponse;
 
@@ -38,7 +36,7 @@ where
     R: AppRequest<R>,
     S: Send + Sync,
     Form<R>: FromRequest<S, Rejection = FormRejection>,
-    Arc<AppState>: FromRef<S>
+    Arc<AppState>: FromRef<S>,
 {
     type Rejection = AppErrorResponse;
 
@@ -55,7 +53,7 @@ where
     R: DeserializeOwned + Send,
     S: Send + Sync,
     Path<R>: FromRequestParts<S, Rejection = PathRejection>,
-    Arc<AppState>: FromRef<S>
+    Arc<AppState>: FromRef<S>,
 {
     type Rejection = AppErrorResponse;
 
@@ -66,16 +64,15 @@ where
 }
 
 pub struct QueryExtractor<R>(pub R);
-impl<R,S> FromRequestParts<S> for QueryExtractor<R>
+impl<R, S> FromRequestParts<S> for QueryExtractor<R>
 where
     S: Send + Sync,
     Query<R>: FromRequestParts<S, Rejection = QueryRejection>,
-    Arc<AppState>: FromRef<S>
+    Arc<AppState>: FromRef<S>,
 {
     type Rejection = AppErrorResponse;
 
-    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection>
-    {
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         let Query(val) = Query::<R>::from_request_parts(parts, state).await?;
         Ok(Self(val))
     }

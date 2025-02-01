@@ -1,7 +1,4 @@
-use crate::domain::contracts::requests::common::validation_helpers::{
-    validate_scopes, validate_status,
-};
-use crate::domain::contracts::requests::common::{validate_regex, Regexes};
+use crate::domain::contracts::requests::common::validation_helpers::validate_status;
 use crate::domain::{AppErrors, AppRequest};
 use serde::Deserialize;
 use std::collections::HashMap;

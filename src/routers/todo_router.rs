@@ -15,7 +15,6 @@ use axum::{Extension, Router};
 use axum_production_ready_authorization_macros::require_scopes;
 use axum_production_ready_security::{JwtClaims, JwtConfig};
 use http::StatusCode;
-use std::path::Path;
 use std::sync::Arc;
 use uuid::Uuid;
 

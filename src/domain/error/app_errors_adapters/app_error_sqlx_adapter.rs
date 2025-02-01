@@ -12,28 +12,23 @@ impl From<Error> for AppErrors {
                     if pg_error.code() == "23505" {
                         AppErrors::InsertConflict(format!("Error {}", value))
                     } else {
-                        let message =
-                            format!("Error {}", value);
+                        let message = format!("Error {}", value);
                         AppErrors::ExternalLibError {
                             lib_type: LibType::Postgresql,
-                            message
+                            message,
                         }
                     }
                 } else {
-                    let message =
-                        format!("Error {}", value);
+                    let message = format!("Error {}", value);
                     AppErrors::ExternalLibError {
                         lib_type: LibType::Postgresql,
                         message,
                     }
                 }
             }
-            Error::RowNotFound => {
-                AppErrors::RegisterNotFound(format!("Error {}", value))
-            }
+            Error::RowNotFound => AppErrors::RegisterNotFound(format!("Error {}", value)),
             _ => {
-                let message =
-                    format!("Error {}", value);
+                let message = format!("Error {}", value);
                 AppErrors::ExternalLibError {
                     lib_type: LibType::Postgresql,
                     message,

@@ -1,10 +1,10 @@
-pub mod user;
-pub mod common;
 pub mod client;
+pub mod common;
 pub mod queries;
+pub mod user;
 pub use queries::Queries;
-pub mod status;
 pub mod authorization;
+pub mod status;
 pub mod todo;
 
 pub use authorization::AppScope;

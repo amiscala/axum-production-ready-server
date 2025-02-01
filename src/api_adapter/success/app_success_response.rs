@@ -10,22 +10,24 @@ where
     T: Serialize,
 {
     pub body: T,
-    pub status_code: CustomHttpStatusCode
+    pub status_code: CustomHttpStatusCode,
 }
 
 impl<T> AppSuccessResponse<T>
-where T: Serialize
+where
+    T: Serialize,
 {
-    pub fn new (body: T, status_code: StatusCode) -> AppSuccessResponse<T>{
-        Self{
+    pub fn new(body: T, status_code: StatusCode) -> AppSuccessResponse<T> {
+        Self {
             body,
-            status_code: CustomHttpStatusCode(status_code)
+            status_code: CustomHttpStatusCode(status_code),
         }
     }
 }
 
 impl<T> IntoResponse for AppSuccessResponse<T>
-where T: Serialize
+where
+    T: Serialize,
 {
     fn into_response(self) -> Response {
         (self.status_code.0, Json(self)).into_response()

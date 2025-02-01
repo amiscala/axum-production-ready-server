@@ -2,7 +2,6 @@ use crate::domain::models::status::AppStatus;
 use crate::domain::AppScope;
 use core::str::FromStr;
 use regex::Regex;
-use std::fmt::format;
 
 pub enum Regexes {
     Email,

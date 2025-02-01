@@ -19,22 +19,46 @@ impl IntoResponse for AppErrorResponse {
     fn into_response(self) -> Response {
         // How we want errors responses to be serialized
         match self {
-            AppErrorResponse::JsonRejection(rejection) => {
-                (rejection.status(), Json(AppErrorStruct::from_single_error("JsonRejection", &rejection.body_text(), StatusCode::BAD_REQUEST))).into_response()
-            }
+            AppErrorResponse::JsonRejection(rejection) => (
+                rejection.status(),
+                Json(AppErrorStruct::from_single_error(
+                    "JsonRejection",
+                    &rejection.body_text(),
+                    StatusCode::BAD_REQUEST,
+                )),
+            )
+                .into_response(),
             AppErrorResponse::AppBusinessError(app_error_response) => {
                 // error_span!("test", message=app_error_response.error.message, code=app_error_response.error.code);
                 (app_error_response.status_code.0, Json(app_error_response)).into_response()
             }
-            AppErrorResponse::FormRejection(rejection) => {
-                (rejection.status(), Json(AppErrorStruct::from_single_error("FormRejection", &rejection.body_text(), StatusCode::BAD_REQUEST))).into_response()
-            }
-            AppErrorResponse::PathRejection(rejection) => {
-                (rejection.status(), Json(AppErrorStruct::from_single_error("PathRejection", &rejection.body_text(), StatusCode::BAD_REQUEST))).into_response()
-            }
-            AppErrorResponse::QueryRejection(rejection) => {
-                (rejection.status(), Json(AppErrorStruct::from_single_error("QueryRejection", &rejection.body_text(), StatusCode::BAD_REQUEST))).into_response()
-            }
+            AppErrorResponse::FormRejection(rejection) => (
+                rejection.status(),
+                Json(AppErrorStruct::from_single_error(
+                    "FormRejection",
+                    &rejection.body_text(),
+                    StatusCode::BAD_REQUEST,
+                )),
+            )
+                .into_response(),
+            AppErrorResponse::PathRejection(rejection) => (
+                rejection.status(),
+                Json(AppErrorStruct::from_single_error(
+                    "PathRejection",
+                    &rejection.body_text(),
+                    StatusCode::BAD_REQUEST,
+                )),
+            )
+                .into_response(),
+            AppErrorResponse::QueryRejection(rejection) => (
+                rejection.status(),
+                Json(AppErrorStruct::from_single_error(
+                    "QueryRejection",
+                    &rejection.body_text(),
+                    StatusCode::BAD_REQUEST,
+                )),
+            )
+                .into_response(),
         }
     }
 }

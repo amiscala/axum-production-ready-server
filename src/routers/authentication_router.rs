@@ -53,7 +53,7 @@ async fn authenticate(
     })
 }
 
-pub fn route(jwt_config: Arc<JwtConfig>,app_state: Arc<AppState>) -> Router{
+pub fn route(jwt_config: Arc<JwtConfig>, app_state: Arc<AppState>) -> Router {
     let public = Router::new()
         .route("/token", post(authenticate))
         .add_logging_and_jwt_config(jwt_config)

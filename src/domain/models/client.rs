@@ -21,7 +21,12 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn new(user_id: Uuid, client_scopes: String, client_description: String, expires_at: Option<DateTime<Utc>>) -> Self {
+    pub fn new(
+        user_id: Uuid,
+        client_scopes: String,
+        client_description: String,
+        expires_at: Option<DateTime<Utc>>,
+    ) -> Self {
         let now = Utc::now();
         Self {
             client_id: create_uuid_v7(),
