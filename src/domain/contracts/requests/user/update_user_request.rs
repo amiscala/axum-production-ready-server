@@ -1,12 +1,10 @@
-use std::collections::HashMap;
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
-use crate::domain::{AppErrors, AppRequest};
 use crate::domain::contracts::requests::common::{validate_regex, Regexes};
+use crate::domain::{AppErrors, AppRequest};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct UpdateUserRequest {
-    pub user_id: Uuid,
     pub email: String,
     pub name: String,
     pub last_name:String

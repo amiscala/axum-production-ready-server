@@ -44,9 +44,9 @@ async fn create_user_and_client(State(state): State<Arc<AppState>>, JsonExtracto
 }
 
 #[require_scopes("write")]
-async fn update_user(State(state): State<Arc<AppState>>, JsonExtractor(request): JsonExtractor<UpdateUserRequest>) -> Result<AppSuccessResponse<User>, AppErrorResponse> {
+async fn update_user(State(state): State<Arc<AppState>>, Extension(jwt_claims): Extension<Arc<JwtClaims>>,JsonExtractor(request): JsonExtractor<UpdateUserRequest>) -> Result<AppSuccessResponse<User>, AppErrorResponse> {
     let query = Queries::UpdateUser {
-        user_id: request.user_id,
+        user_id: jwt_claims.sub,
         name: request.name,
         email: request.email,
         last_name: request.last_name
