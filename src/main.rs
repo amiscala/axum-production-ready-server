@@ -24,7 +24,8 @@ struct AppState {
 #[tokio::main]
 async fn main() {
     dotenv::dotenv().expect("is the env file on the project root?");
-    let _guard = ObservabilityGuard::new(Level::INFO, "tracer", "http://localhost:4317");
+    let otel_url = env::var("OTLP_COLLECTOR_URL").expect("OTLP_COLLECTOR_URL not set");
+    let _guard = ObservabilityGuard::new(Level::INFO, "tracer", otel_url);
     let jwt_config = Arc::new(
         get_jwt_configuration(
             &format!("{}/{}", env!("CARGO_MANIFEST_DIR"), "private_key.pem"),
@@ -34,14 +35,14 @@ async fn main() {
         .expect(&format!("Working dir: {}", env!("CARGO_MANIFEST_DIR"))),
     );
 
-    let migration_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    let pool = PgPool::connect(&migration_url).await.expect(&format!(
+    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
+    let pool = PgPool::connect(&db_url).await.expect(&format!(
         "Error while creating migration connection pool with db url {}",
-        migration_url
+        db_url
     ));
     migrate!("./migrations").run(&pool).await.expect(&format!(
         "Error while running migrations with this db url :{}",
-        migration_url
+        db_url
     ));
 
     let app_state = Arc::new(AppState {
@@ -63,7 +64,7 @@ async fn main() {
     )
     .await
     .unwrap();
-    let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 4000));
     axum_server::bind_rustls(addr, config)
         .serve(app.into_make_service())
         .await
